@@ -337,7 +337,7 @@ def merge_perm(sm, permission_name, view_menu_name, connection):
         )
 
 
-def set_perm(mapper, connection, target):  # noqa
+def set_perm(mapper, connection, target, perm_list=['datasource_access']):  # noqa
 
     if target.perm != target.get_perm():
         link_table = target.__table__
@@ -348,4 +348,9 @@ def set_perm(mapper, connection, target):  # noqa
         )
 
     # add to view menu if not already exists
-    merge_perm(sm, 'datasource_access', target.get_perm(), connection)
+    for perm in perm_list:
+        merge_perm(sm, perm, target.get_perm(), connection)
+
+
+def set_perm_db(mapper, connection, target):
+    set_perm(mapper, connection, target, ['datasource_access', 'database_access'])
